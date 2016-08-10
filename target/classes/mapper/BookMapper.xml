@@ -18,5 +18,8 @@
 	<update id="updateName" parameterType="com.tedu.cloudnet.entity.Book">
 		update cn_notebook set cn_notebook_name=#{cn_notebook_name} where cn_notebook_id=#{cn_notebook_id}
 	</update> 
+	<delete id="delete" parameterType="string">
+		delete from cn_notebook where cn_notebook_id = #{id}
+	</delete>
     
 </mapper>

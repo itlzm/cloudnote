@@ -25,6 +25,8 @@
    		<script type="text/javascript" src="scripts/note.js"></script>
    		<script type="text/javascript" src="scripts/alert.js"></script>
    		<script type="text/javascript">
+   			var page = 1;//搜索页数
+   			var noteTitle = "";//搜索框输入的关键字
    			//页面载入完成之后自动调用该js函数
    			$(function(){
    				//状态栏显示用户名
@@ -73,7 +75,68 @@
 					delCookie("uname");
 					window.location.href = "log_in.html";
 				});
-				
+				//13.弹出笔记菜单
+				$("#note_ul").on("click",".btn_slide_down",popNoteMenu);
+				//点击页面任意位置，隐藏笔记菜单
+				$("body").click(hideNoteMenu);
+				//点击笔记菜单删除按钮，弹出删除笔记对话框
+				$("#note_ul").on("click",".btn_delete",alertDeleteNoteWindow);
+				//删除笔记对话框，删除按钮动态绑定单击事件
+				$("#can").on("click","#sure_deleteNote",sureDeleteNote);
+				//点击笔记菜单转移按钮，弹出转移笔记对话框
+				$("#note_ul").on("click",".btn_move",alertMoveNoteWindow);
+				//转移笔记对话框，确定按钮动态绑定单击事件
+				$("#can").on("click","#sure_moveNote",moveNote);
+				//单击回收站按钮，显示删除的笔记
+				$("#rollback_button").click(loadDeleteNote);
+				//对回收站笔记操作,弹出确认删除该笔记对话框
+				$("#delete_note_ul").on("click",".btn_delete",alertSureDeleteNoteWindow);
+				//确认删除笔记，该操作不可恢复
+				$("#can").on("click","#finalDeleteNote",finalDeleteNote);
+				//弹出还原回收站中删除的笔记对话框
+				$("#delete_note_ul").on("click",".btn_replay",alertRepalyNoteWindow);
+				//确定还原该笔记到指定笔记本操作
+				$("#can").on("click","#sureReplayNote",replayNote);
+				//当笔记本无笔记信息时，删除笔记操作
+				$("#can").on("click","#sureDeleteBook",deleteBook);
+				//用户分享笔记操作
+				$("#note_ul").on("click",".btn_share",shareNote);
+				//搜索分享的笔记操作
+				$("#search_note").keypress(function(e){
+					var eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+				     if (eCode == 13){
+				    	 //清空原有列表结果
+						 $("#pc_part_6 ul").empty();
+						 //显示搜索结果列表，其它列表隐藏
+						 $("#pc_part_6").show();
+						 $("#pc_part_2").hide();
+						 $("#pc_part_4").hide();
+						 $("#pc_part_7").hide();
+						 $("#pc_part_8").hide();
+						 //获取搜索框输入的关键字
+				         noteTitle = $("#search_note").val().trim();
+						 //回车默认显示第一页结果
+				         page = 1;
+				         //发送ajax请求
+				         searchSharePage(noteTitle, page);
+				     }
+				});
+				//搜索结果列表，更多按钮动态绑定单击事件
+				$("#more_note").click(function(){
+					//将page+1
+					page = page+1;
+					//获取查询的关键字和要显示的页数
+					//发送ajax请求
+					searchSharePage(noteTitle, page)
+				});
+				//预览搜索出来的笔记
+				$("#share_ul").on("click","li",loadShareNote);
+				//收藏搜索出来的笔记,弹出收藏笔记对话框
+				$("#share_ul").on("click",".btn_slide_down",alertLikeNoteWindow);
+				//收藏笔记对话框，确定收藏笔记操作
+				$("#can").on("click","#sureLike",function(){
+					
+				});
    			});
    		</script>
     </head>
@@ -168,8 +231,21 @@
 					<div class="module" data-toggle="niceScroll">
 						<div class="chat-contact">
 							<div class="contact-body">
-								<ul class="contacts-list">
-									<li class="disable"><a ><i class="fa fa-file-text-o" title="online" rel="tooltip-bottom"></i> 虚假回收站笔记<button type="button" class="btn btn-default btn-xs btn_position btn_delete"><i class="fa fa-times"></i></button><button type="button" class="btn btn-default btn-xs btn_position_2 btn_replay"><i class="fa fa-reply"></i></button></a></li>
+								<ul class="contacts-list" id="delete_note_ul">
+									<li class="disable">
+										<!-- 动态生成删除的笔记
+										<a >
+											<i class="fa fa-file-text-o" title="online" rel="tooltip-bottom"></i> 虚假回收站笔记
+											<button type="button" class="btn btn-default btn-xs btn_position btn_delete">
+												<i class="fa fa-times"></i>
+											</button>
+											<button type="button" class="btn btn-default btn-xs btn_position_2 btn_replay">
+												<i class="fa fa-reply"></i>
+											</button>
+										</a>
+										 -->
+										
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -186,7 +262,8 @@
 					<div class="module" data-toggle="niceScroll">
 						<div class="chat-contact">
 							<div class="contact-body">
-								<ul class="contacts-list">
+								<ul class="contacts-list" id="share_ul">
+								<!-- 动态生成搜索结果li -->
 								</ul>
 							</div>
 						</div>

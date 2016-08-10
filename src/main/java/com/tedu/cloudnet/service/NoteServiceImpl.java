@@ -86,5 +86,77 @@ public class NoteServiceImpl implements NoteService {
 		}
 		return result;
 	}
-
+	//删除笔记,更改笔记信息的状态值为2
+	public NoteResult deleteNote(String noteId) {
+		int i = dao.updateStatus(noteId);
+		NoteResult result = new NoteResult();
+		if(i>=1){
+			result.setStatus(0);
+			result.setMsg("笔记删除成功");
+		}else{
+			result.setStatus(1);
+			result.setMsg("笔记删除失败");
+		}
+		return result;
+	}
+	//加载回收站笔记列表信息
+	public NoteResult loadDeleteNote(String id){
+		List<Note> notes = dao.findDeleteByUserId(id);
+		NoteResult result = new NoteResult();
+		if(!notes.isEmpty()){
+			result.setStatus(0);
+			result.setMsg("回收站不为空");
+			result.setData(notes);
+		}else{
+			result.setStatus(1);
+			result.setMsg("回收站为空");
+		}
+		return result;
+	}
+	//移动笔记到另一个笔记本
+	public NoteResult moveNote(String bookId, String noteId) {
+		Note note = new Note();
+		note.setCn_note_id(noteId);
+		note.setCn_notebook_id(bookId);
+		int i = dao.updateBookId(note);
+		NoteResult result = new NoteResult();
+		if(i>=1){
+			result.setStatus(0);
+			result.setMsg("移动笔记成功");
+		}else{
+			result.setStatus(1);
+			result.setMsg("移动笔记失败");
+		}
+		return result;
+	}
+	//彻底删除笔记信息
+	public NoteResult finalDeleteNote(String noteId) {
+		int i = dao.deleteNote(noteId);
+		NoteResult result = new NoteResult();
+		if(i>=1){
+			result.setStatus(0);
+			result.setMsg("删除笔记成功");
+		}else{
+			result.setStatus(1);
+			result.setMsg("删除笔记失败");
+		}
+		return result;
+	}
+	//恢复删除的笔记到指定的笔记本中
+	public NoteResult replayDeleteNote(String bookId, String noteId) {
+		Note note = new Note();
+		NoteResult result = new NoteResult();
+		note.setCn_note_id(noteId);
+		note.setCn_notebook_id(bookId);
+		int i = dao.replayNote(note);
+		if(i>=1){
+			result.setStatus(0);
+			result.setMsg("笔记恢复成功");
+		}else{
+			result.setStatus(1);
+			result.setMsg("笔记恢复失败");
+		}
+		return result;
+	}
+	
 }

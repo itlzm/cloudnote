@@ -59,7 +59,7 @@ function checkLogin(){
 			}
 		});
 	}
-}
+};
 //注册处理
 function checkRegist(){
 	//获取请求参数
@@ -122,7 +122,7 @@ function checkRegist(){
 			}
 		});
 	}
-}
+};
 //检查用户名是否重复
 function checkUserName(){
 	//获取输入框中数据,注：删掉用户开头或结尾误输入的空格符
@@ -156,4 +156,4 @@ function checkUserName(){
 			}
 		});
 	}
-}
+};

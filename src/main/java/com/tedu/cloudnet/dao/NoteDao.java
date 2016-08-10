@@ -10,4 +10,10 @@ public interface NoteDao {
 	public Note findById(String id);
 	public int updateNoteById(Note note);
 	public int save(Note note);
+	public int updateStatus(String id);
+	public List<Note> findDeleteByUserId(String id);
+	public int updateBookId(Note note);
+	public int deleteNote(String id);
+	public int replayNote(Note note);
+	public int updateType(String id);
 }

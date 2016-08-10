@@ -14,6 +14,7 @@ import com.tedu.cloudnet.util.NoteResult;
 import com.tedu.cloudnet.util.NoteUtil;
 @Service
 public class BookServiceImpl implements BookService{
+	
 	@Resource
 	private BookDao dao;
 	public NoteResult loadUserBooks(String id) {
@@ -79,5 +80,17 @@ public class BookServiceImpl implements BookService{
 		}
 		return result;
 	}
-
+	//根据bookId删除用户笔记本
+	public NoteResult deleteBook(String bookId) {
+		NoteResult result = new NoteResult();
+		int i = dao.delete(bookId);
+		if(i>=1){
+			result.setStatus(0);
+			result.setMsg("笔记本删除成功");
+		}else{
+			result.setStatus(1);
+			result.setMsg("笔记本删除失败");
+		}
+		return result;
+	}
 }

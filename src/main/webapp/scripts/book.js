@@ -26,7 +26,7 @@ function loadUserBooks(){
 							creatBookLi(bookId, bookName);
 						}
 					}else if(result.status==1){
-						
+						alertAddBookWindow();
 					}
 				},
 				error:function(){
@@ -127,4 +127,25 @@ function creatBookLi(bookId,bookName){
 	$li.data("bookId",bookId);
 	//将li元素添加到ul列表上
 	$("#book_ul").append($li);
+}
+//删除无笔记信息的笔记本
+function deleteBook(){
+	//获取笔记本的bookId
+	var $li = $("#book_ul a.checked").parent();
+	var bookId = $li.data("bookId");
+	$.ajax({
+		url:base_path + "/book/delete.do",
+		type:"post",
+		data:{"bookId":bookId},
+		dataType:"json",
+		success:function(result){
+			if(result.status==0){
+				alert(result.msg);
+				$li.remove();
+			}
+		},
+		error:function(){
+			alert("删除笔记本异常");
+		}
+	});
 }

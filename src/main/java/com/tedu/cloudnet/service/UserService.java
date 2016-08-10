@@ -1,5 +1,6 @@
 package com.tedu.cloudnet.service;
 
+
 import com.tedu.cloudnet.util.NoteResult;
 
 public interface UserService {

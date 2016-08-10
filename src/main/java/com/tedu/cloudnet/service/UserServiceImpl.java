@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 import com.tedu.cloudnet.dao.UserDao;
@@ -15,10 +16,14 @@ import com.tedu.cloudnet.util.NoteResult;
 import com.tedu.cloudnet.util.NoteUtil;
 //扫描
 @Service("userService")
+@Transactional
 public class UserServiceImpl implements UserService {
 	//@Resource(name="userDao")
 	@Resource
 	private UserDao dao;//注入dao
+	@Transactional(readOnly=true)//设置只读事务,默认为false
+	//rollerbackFor默认RuntimeException,如果其它类型异常也需要回滚，指定rollbackFor=Ecxeption.class
+	//propagation默认类型为required，事务传播类型
 	public NoteResult checkLogin(String name, String password){
 		
 		NoteResult result = new NoteResult();
