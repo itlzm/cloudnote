@@ -74,7 +74,6 @@ public class UserServiceImpl implements UserService {
 			user.setCn_user_id(NoteUtil.createId());//设置Id,使用NoteUtil工具类生成UUID
 			dao.save(user);
 			//创建返回结果
-			
 			result.setStatus(0);
 			result.setMsg("注册成功");
 			return result;

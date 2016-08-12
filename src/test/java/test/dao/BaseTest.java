@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class BaseTest {
-	ApplicationContext ac;
+	protected ApplicationContext ac;
 	@Before
 	public void init(){
 		String[] conf = {"conf/spring-mvc.xml","conf/spring-mybatis.xml"};

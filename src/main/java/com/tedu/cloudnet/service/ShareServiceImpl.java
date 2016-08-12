@@ -36,7 +36,11 @@ public class ShareServiceImpl implements ShareService{
 			result.setMsg("该笔记已被分享");
 		}else{
 			//对未分享的笔记执行更新note_type_id操作，改为2
-			noteDao.updateType(noteId);
+//			noteDao.updateType(noteId);
+			Note note1 = new Note();
+			note1.setCn_note_id(noteId);
+			note1.setCn_note_type_id("2");
+			noteDao.dynamicUpdate(note1);
 			Share share = new Share();
 			share.setCn_note_id(noteId);
 			share.setCn_share_body(note.getCn_note_body());

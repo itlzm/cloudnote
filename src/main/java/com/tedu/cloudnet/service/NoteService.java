@@ -12,4 +12,5 @@ public interface NoteService {
 	public NoteResult moveNote(String bookId,String noteId);
 	public NoteResult finalDeleteNote(String noteId);
 	public NoteResult replayDeleteNote(String bookId,String noteId);
+	public NoteResult searchNotes(String title,String status,String beginStr,String endStr);
 }

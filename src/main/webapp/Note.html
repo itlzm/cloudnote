@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>笔记搜索</title>
+<script type="text/javascript" src="scripts/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#search_btn").click(function(){
+			var title = $("#tilte").val().trim();
+			var status = $("#status").val();
+			var begin = $("#begin").val().trim();
+			var end = $("#end").val().trim();
+			$.ajax({
+				url:"note/higsearch.do",
+				type:"post",
+				data:{"title":title,"status":status,"begin":begin,"end":end},
+				dataType:"json",
+				success:function(result){
+					if(result.status==0){
+						$("table").empty();
+						var notes = result.data;
+						for(var i=0;i<notes.length;i++){
+							var note = notes[i];
+							var id = note.cn_note_id;
+							var title = note.cn_note_title;
+							var str = "<tr><td>"+id+"</td><td>"+title+"</td></tr>";
+							$("table").append(str);
+						}
+					}
+				},
+				error:function(){
+					alert("搜索异常");
+				}
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	标题：<input type="text" id="tilte">
+	状态：<select id="status">
+			<option value="0">全部</option>
+			<option value="1">正常</option>
+			<option value="2">删除</option>
+		</select>
+		<button id="search_btn">开始搜索</button>
+	开始 日期：<input type="text" id="begin">
+	结束 日期：<input type="text" id="end">
+	<hr/>
+	<table ></table>
+</body>
+</html>

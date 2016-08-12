@@ -1,5 +1,7 @@
 package com.tedu.cloudnet.service;
 
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +51,8 @@ public class NoteServiceImpl implements NoteService {
 		note.setCn_note_body(body);
 		note.setCn_note_title(title);
 		note.setCn_note_create_time(System.currentTimeMillis());
-		int rows = dao.updateNoteById(note);//该变量用于确定note是否更新成功
+//		int rows = dao.updateNoteById(note);//该变量用于确定note是否更新成功
+		int rows = dao.dynamicUpdate(note);//该变量用于确定note是否更新成功
 		if(rows==1){
 			result.setStatus(0);
 			result.setMsg("保存成功");
@@ -88,7 +91,11 @@ public class NoteServiceImpl implements NoteService {
 	}
 	//删除笔记,更改笔记信息的状态值为2
 	public NoteResult deleteNote(String noteId) {
-		int i = dao.updateStatus(noteId);
+//		int i = dao.updateStatus(noteId);
+		Note note = new Note();
+		note.setCn_note_id(noteId);
+		note.setCn_note_status_id("2");
+		int i = dao.dynamicUpdate(note);
 		NoteResult result = new NoteResult();
 		if(i>=1){
 			result.setStatus(0);
@@ -118,7 +125,8 @@ public class NoteServiceImpl implements NoteService {
 		Note note = new Note();
 		note.setCn_note_id(noteId);
 		note.setCn_notebook_id(bookId);
-		int i = dao.updateBookId(note);
+//		int i = dao.updateBookId(note);
+		int i = dao.dynamicUpdate(note);
 		NoteResult result = new NoteResult();
 		if(i>=1){
 			result.setStatus(0);
@@ -156,6 +164,36 @@ public class NoteServiceImpl implements NoteService {
 			result.setStatus(1);
 			result.setMsg("笔记恢复失败");
 		}
+		return result;
+	}
+	public NoteResult searchNotes(String title, String status, String beginStr, String endStr) {
+		//创建参数
+		Map<String, Object> params = new HashMap<String, Object>();
+		//标题
+		if(title!=null && "".equals(title)){
+			params.put("title", "%"+title+"%");
+		}
+		//状态
+		if(!"0".equals(status)){
+			params.put("status", status);
+		}
+		//开始日期
+		if(beginStr!=null && !"".equals(beginStr)){
+			Date beginDate = Date.valueOf(beginStr);
+			//对应SQL中的#{begin}
+			params.put("begin", beginDate.getTime());
+		}
+		//结束日期
+		if(endStr!=null && !"".equals(endStr)){
+			Date endDate = Date.valueOf(endStr);
+			//对应SQL中的#{begin}
+			params.put("end", endDate.getTime());
+		}
+		List<Note> notes = dao.findNotes(params);
+		NoteResult result = new NoteResult();
+		result.setStatus(0);
+		result.setMsg("搜索完毕");
+		result.setData(notes);
 		return result;
 	}
 	
